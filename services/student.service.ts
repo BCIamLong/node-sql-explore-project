@@ -20,7 +20,67 @@ class StudentService {
 
   async postOne({ Name, Email, Phone }: StudentInput) {
     const student =
-      await sql.query`INSERT INTO Student (Name, Email, Phone) VALUES (${Name}, ${Email}, ${Phone})`;
+      await sql.query`INSERT INTO Student (Name, Email, Phone) VALUES (${Name}, ${Email}, ${Phone}) 
+      SELECT * FROM Student WHERE id = SCOPE_IDENTITY();`;
+    // * Use SCOPE_IDENTITY() to get the new ID value
+    // * https://stackoverflow.com/questions/7917695/sql-server-return-value-after-insert
+    // * https://learn.microsoft.com/en-us/sql/t-sql/functions/scope-identity-transact-sql?view=sql-server-ver16&redirectedfrom=MSDN
+
+    return student.recordset[0];
+  }
+
+  async updateOne(id: string, { Name, Email, Phone }: StudentInput) {
+    // let sqlStr: string | string[] = `UPDATE Student SET `;
+    // if (Name) sqlStr = sqlStr + `Name = ${Name}, `;
+    // if (Email) sqlStr = sqlStr + `Email = ${Email}, `;
+    // if (Phone) sqlStr = sqlStr + `Phone = ${Phone}, `;
+    // sqlStr = sqlStr.split("");
+    // sqlStr[sqlStr.length - 2] = "";
+
+    // sqlStr = sqlStr.join("");
+    // sqlStr =
+    //   sqlStr +
+    //   ` WHERE Id=${id}
+    //    SELECT * FROM Student WHERE Id=${id}`;
+
+    // const sqlStr = `UPDATE Student SET Name = ${Name}, Email = ${Email}, Phone = ${Phone} WHERE Id = ${id}`;
+    // console.log(sqlStr);
+    // // console.log(sqlStr);
+    // const student = await new sql.Request()
+    //   .input("name", sql.NVarChar, Name)
+    //   .input("email", sql.VarChar, Email)
+    //   .input("phone", sql.VarChar, Phone)
+    //   .input("id", sql.Int, +id)
+    //   .query(
+    //     "UPDATE Student SET Name = @name, Email = @email, Phone = @phone WHERE Id = @id",
+    //     (err, result) => {
+    //       console.log(err);
+    //       console.log(result);
+    //     }
+    //   );
+
+    // console.log(student);
+    // ! one thing note here that:  sql.query`` this `` is not like in JS
+    // ! so if we do it with sql.query`${sqlStr}` it will be sql.query`'UPDATE Student SET Name...'` then of course this is obviously an error
+    // let sqlStr: string | string[] = "";
+    // if (Name) sqlStr = sqlStr + `Name = ${Name}, `;
+    // if (Email) sqlStr = sqlStr + `Email = ${Email}, `;
+    // if (Phone) sqlStr = sqlStr + `Phone = ${Phone}, `;
+    // sqlStr = sqlStr.split("");
+    // sqlStr[sqlStr.length - 2] = "";
+
+    // sqlStr = sqlStr.join("");
+    // console.log(sqlStr);
+    // ! so when we assign like Name = ${Name} it will be Name = 'name_value' which is valid but if we assign string like sqlStr = 'Name = 'value_name'' well somehow that the way in work in this sql.query and if we write `%{sql}` => `'Name = 'value_name''` => error
+    const student =
+      await sql.query`UPDATE Student SET Name = ${Name}, Email = ${Email}, Phone = ${Phone} WHERE Id=${id}
+      SELECT * FROM Student WHERE Id = ${id}`;
+
+    return student.recordset[0];
+  }
+
+  async deleteOne(id: string) {
+    const student = await sql.query`DELETE FROM Student WHERE Id=${id}`;
 
     return student;
   }

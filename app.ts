@@ -1,15 +1,52 @@
-import express, { Request, Response } from "express";
+import express, { Application } from "express";
 import morgan from "morgan";
 
-import route from "./routes";
+import AppRouter from "./routes";
 
-const app = express();
+// const app = express();
 
-if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
+// if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 
-app.use(express.json({ limit: "90kb" }));
-app.use(express.urlencoded({ extended: true }));
+// app.use(express.json({ limit: "90kb" }));
+// app.use(express.urlencoded({ extended: true }));
 
-app.use(route);
+// // app.use(route);
 
-export default app;
+// export default app;
+
+export default class App {
+  public app: Application;
+
+  public appRouter = new AppRouter();
+
+  constructor(public port: number) {
+    this.app = express();
+
+    // this.initializeDatabaseConnection();
+    this.initializeMiddlewares();
+    this.initializeAppRouter();
+    this.initializeGlobalErrorHandler();
+  }
+
+  private initializeMiddlewares() {
+    if (process.env.NODE_ENV === "development") this.app.use(morgan("dev"));
+    this.app.use(express.json({ limit: "90kb" }));
+    this.app.use(express.urlencoded({ extended: true }));
+  }
+
+  private initializeAppRouter() {
+    this.app.use(this.appRouter.router);
+  }
+
+  private initializeGlobalErrorHandler() {}
+
+  // private initializeDatabaseConnection() {
+
+  // }
+
+  public listen() {
+    this.app.listen(this.port, () =>
+      console.log(`Server is listening at port ${this.port}`)
+    );
+  }
+}

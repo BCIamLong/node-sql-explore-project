@@ -9,6 +9,8 @@ class StudentController {
     this.getStudent = this.getStudent.bind(this);
     this.getStudents = this.getStudents.bind(this);
     this.createStudent = this.createStudent.bind(this);
+    this.deleteStudent = this.deleteStudent.bind(this);
+    this.updateStudent = this.updateStudent.bind(this);
   }
 
   getStudents = async (req: Request, res: Response) => {
@@ -38,7 +40,6 @@ class StudentController {
   async createStudent(req: Request, res: Response) {
     const { Name, Email, Phone } = req.body;
     const student = await this.studentsService.postOne({ Name, Email, Phone });
-    console.log(student);
 
     res.status(201);
     res.json({
@@ -46,6 +47,34 @@ class StudentController {
       data: {
         student,
       },
+    });
+  }
+
+  async updateStudent(req: Request, res: Response) {
+    const { id } = req.params;
+    const { Name, Email, Phone } = req.body;
+    const student = await this.studentsService.updateOne(id, {
+      Name,
+      Email,
+      Phone,
+    });
+
+    res.json({
+      status: "success",
+      data: {
+        student,
+      },
+    });
+  }
+
+  async deleteStudent(req: Request, res: Response) {
+    const { id } = req.params;
+    const student = await this.studentsService.deleteOne(id);
+
+    res.status(204);
+    res.json({
+      status: "success",
+      data: null,
     });
   }
 
