@@ -1,7 +1,12 @@
 import sql from "mssql";
 import { StudentInput } from "../interfaces";
+import { Student } from "../models";
 
 class StudentService {
+  constructor() {
+    // new Student();
+  }
+
   async getAll() {
     const students = await sql.query`SELECT * FROM Student`;
     return students.recordset;

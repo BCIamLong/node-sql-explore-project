@@ -2,6 +2,7 @@ import express, { Application } from "express";
 import morgan from "morgan";
 
 import AppRouter from "./routes";
+// import connectDB from "./connect";
 
 // const app = express();
 
@@ -16,10 +17,12 @@ import AppRouter from "./routes";
 
 export default class App {
   public app: Application;
+  public port: number;
 
   public appRouter = new AppRouter();
 
-  constructor(public port: number) {
+  constructor(port: number) {
+    this.port = port;
     this.app = express();
 
     // this.initializeDatabaseConnection();
@@ -41,7 +44,7 @@ export default class App {
   private initializeGlobalErrorHandler() {}
 
   // private initializeDatabaseConnection() {
-
+  //   connectDB();
   // }
 
   public listen() {

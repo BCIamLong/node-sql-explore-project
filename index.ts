@@ -1,6 +1,6 @@
 import "dotenv/config";
-import App from "./app";
 import "./connect";
+import App from "./app";
 
 const port = process.env.PORT || 3333;
 

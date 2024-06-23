@@ -16,6 +16,16 @@ const sqlConfig: config = {
   },
 };
 
+// const connectDB = async () => {
+//   try {
+//     await sql.connect(sqlConfig);
+//     console.log("SQL DB connect successful");
+//   } catch (err) {
+//     console.log(err);
+//   }
+// };
+
+// export default connectDB;
 (async () => {
   try {
     await sql.connect(sqlConfig);
