@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { StudentService } from "../services";
 
 class StudentController {
-  public studentsService = new StudentService();
+  public studentsService = new StudentService("Student");
 
   constructor() {
     // * bind method way to resolved the problem of this keyword with callback function
@@ -52,12 +52,7 @@ class StudentController {
 
   async updateStudent(req: Request, res: Response) {
     const { id } = req.params;
-    const { Name, Email, Phone } = req.body;
-    const student = await this.studentsService.updateOne(id, {
-      Name,
-      Email,
-      Phone,
-    });
+    const student = await this.studentsService.updateOne(id, req.body);
 
     res.json({
       status: "success",
@@ -69,7 +64,7 @@ class StudentController {
 
   async deleteStudent(req: Request, res: Response) {
     const { id } = req.params;
-    const student = await this.studentsService.deleteOne(id);
+    await this.studentsService.deleteOne(id);
 
     res.status(204);
     res.json({
