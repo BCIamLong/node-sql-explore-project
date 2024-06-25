@@ -7,9 +7,9 @@ export default class BaseService<T> {
 
   private request: Request = new sql.Request();
 
-  constructor(protected table: string) {}
+  constructor(public table: string) {}
 
-  async getAll() {
+  async findAll() {
     const queryStr = `SELECT * FROM ${this.table}`;
     const students = await this.request.query(queryStr);
 
@@ -17,14 +17,14 @@ export default class BaseService<T> {
     return students.recordset;
   }
 
-  async getOne(id: string) {
+  async findOne(id: string) {
     const queryStr = `SELECT * FROM ${this.table} where Id=${id}`;
     const student = await this.request.query(queryStr);
 
     return student.recordset.length > 0 ? student.recordset[0] : null;
   }
 
-  async postOne(data: Omit<T, "Id">) {
+  async create(data: Omit<T, "Id">) {
     const columns = Object.keys(data);
     const values = Object.values(data);
 
@@ -47,7 +47,7 @@ export default class BaseService<T> {
     return student.recordset[0];
   }
 
-  async updateOne(id: string, data: Partial<Omit<T, "Id">>) {
+  async update(id: string, data: Partial<Omit<T, "Id">>) {
     const columns = Object.keys(data);
     const values = Object.values(data);
 
@@ -67,7 +67,7 @@ export default class BaseService<T> {
     return student.recordset[0];
   }
 
-  async deleteOne(id: string) {
+  async delete(id: string) {
     const queryStr = `DELETE FROM Student WHERE Id=${id}`;
 
     this.request.query(queryStr);

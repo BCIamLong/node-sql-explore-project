@@ -2,7 +2,7 @@ import { IStudent } from "../interfaces";
 import BaseService from "./base.service";
 
 class StudentService extends BaseService<IStudent> {
-  constructor(protected table: string) {
+  constructor(public table: string) {
     super(table);
   }
 }

@@ -1,10 +1,11 @@
 import { Router } from "express";
 import { StudentController } from "../controllers";
 import { asyncCatch } from "../utils";
+import { StudentService } from "../services";
 
-const studentRoute = Router();
+// const studentRoute = Router();
 
-const studentController = new StudentController();
+// const studentController = new StudentController();
 
 // studentRoute
 //   .route("/")
@@ -23,7 +24,9 @@ const studentController = new StudentController();
 
 export default class StudentRouter {
   public router = Router();
-  public studentController = new StudentController();
+  public studentController = new StudentController(
+    new StudentService("Student")
+  );
 
   constructor() {
     this.initializeRoutes();
@@ -32,13 +35,18 @@ export default class StudentRouter {
   private initializeRoutes() {
     this.router
       .route("/")
-      .get(asyncCatch(studentController.getStudents))
-      .post(asyncCatch(studentController.createStudent));
+      .get(asyncCatch(this.studentController.getAll))
+      .post(asyncCatch(this.studentController.create));
+    // .get(asyncCatch(studentController.getStudents))
+    // .post(asyncCatch(studentController.createStudent));
 
     this.router
       .route("/:id")
-      .get(asyncCatch(studentController.getStudent))
-      .patch(asyncCatch(studentController.updateStudent))
-      .delete(asyncCatch(studentController.deleteStudent));
+      .get(asyncCatch(this.studentController.getOne))
+      .patch(asyncCatch(this.studentController.update))
+      .delete(asyncCatch(this.studentController.delete));
+    // .get(asyncCatch(studentController.getStudent))
+    // .patch(asyncCatch(studentController.updateStudent))
+    // .delete(asyncCatch(studentController.deleteStudent));
   }
 }
