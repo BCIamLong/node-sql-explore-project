@@ -74,4 +74,28 @@ export default class BaseService<T> {
 
     return null;
   }
+
+  // * ?sort=Name&sort=-Age => req.query = {sort: ['Name', '-Age']}
+  // * ?sort=Name => req.query = {sort: 'Name'}
+  // * sortQuery param in this case is the value of sort
+  // * we need to handle - symbol to DESC in SQL right
+  // * by default it's ASYNC so we don't need to handle for this case if it's just Age not -Age
+  async sort(sortQuery: string | string[]) {
+    let sortQueryStr = "";
+
+    if (typeof sortQuery === "string") {
+      if (sortQuery[0] === "-") sortQueryStr = sortQuery + " DESC";
+      else sortQueryStr = sortQuery;
+    } else {
+      sortQueryStr = sortQuery.join(", ");
+    }
+
+    const queryStr = `SELECT * FROM ${this.table} ORDER BY ${sortQueryStr}`;
+  }
+
+  async filter() {}
+
+  async select() {}
+
+  async pagination() {}
 }
